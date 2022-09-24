@@ -46,13 +46,18 @@ export class CalculadoraComponent implements OnInit {
     //identificamos operacion
     if(this.checkErrors()){
       switch(this.operation) {
-      case 'C':
-        //reseteamos todo
-        this.primerValor = '';
-        break;
       case '/':
         this.result = parseFloat(this.primerValor)/parseFloat(this.segundoValor);
         console.log('Resultado: ', this.result)
+        break;
+      case 'X':
+        this.result = parseFloat(this.primerValor)*parseFloat(this.segundoValor);
+        break;
+      case '+':
+        this.result = parseFloat(this.primerValor)+parseFloat(this.segundoValor);
+        break;
+      case '-':
+        this.result = parseFloat(this.primerValor)-parseFloat(this.segundoValor);
         break;
       }
       //asignamos resultado a primer valor para poder concatenar operaciones y reseteamos res y segundoVal
@@ -63,6 +68,13 @@ export class CalculadoraComponent implements OnInit {
     }
   }
 
+  clearAll() {
+    this.primerValor = '';
+    this.segundoValor = '';
+    this.result = null;
+    this.isPrimerValueOperatorInserted = false;
+  }
+
   /**
    * 
    * @returns 
@@ -70,12 +82,13 @@ export class CalculadoraComponent implements OnInit {
   checkErrors() {
     console.log('Entra en check errors')
     //comprobamos que tenemos valores para obtener resultado
-    if(this.primerValor === '') {
+    if(this.primerValor === '' || this.segundoValor === '') {
       this.isError = true;
       this.errorMessage = 'No value';
       console.log('Error ', this.errorMessage)
       return false;
     }
+    //comprobamos que 
 
     return true;
   }
