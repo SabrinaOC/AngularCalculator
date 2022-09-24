@@ -1,3 +1,4 @@
+import { isNull } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -26,29 +27,53 @@ export class CalculadoraComponent implements OnInit {
   getAndAddValue(valor: string) {
     //comprobamos si añadimos a primer valor o a segundo
     if(!this.isPrimerValueOperatorInserted) {
-      this.primerValor += valor;
+      if(valor === '.') {
+        //comprobamos que solo hay un .
+        if(!this.checkSingleDecimalDot(this.primerValor)) {
+        this.primerValor += valor;
+        };
+      } else {
+        this.primerValor += valor;
+      }
     } else {
-      this.segundoValor += valor;
+      if(valor === '.') {
+        //comprobamos que solo hay un .
+        if(!this.checkSingleDecimalDot(this.segundoValor)) {
+        this.segundoValor += valor;
+        };
+      } else {
+        this.segundoValor += valor;
+      }
     }
   }
 
   /**
-   * 
+   *
    */
   getOperator(operador: string) {
-    this.operation = operador;
-    console.log('Operador: ', this.operation);
-    //ponemos bandera de que se ha terminado de introducir el primer valor
-    this.isPrimerValueOperatorInserted = true;
+    //comprobamos que tenemos primer término
+    if(this.primerValor === '') {
+      this.showError('Need to introduce a number first');
+    } else {
+      this.operation = operador;
+      //ponemos bandera de que se ha terminado de introducir el primer valor
+      this.isPrimerValueOperatorInserted = true;
+    }
+    
   }
 
+  /**
+   *
+   */
   getResult() {
     //identificamos operacion
     if(this.checkErrors()){
       switch(this.operation) {
       case '/':
-        this.result = parseFloat(this.primerValor)/parseFloat(this.segundoValor);
-        console.log('Resultado: ', this.result)
+        //comprobamos que no se intenta dividir entre 0
+        if(!this.checkDivisionByZero) {
+          this.result = parseFloat(this.primerValor)/parseFloat(this.segundoValor);
+        }
         break;
       case 'X':
         this.result = parseFloat(this.primerValor)*parseFloat(this.segundoValor);
@@ -60,19 +85,38 @@ export class CalculadoraComponent implements OnInit {
         this.result = parseFloat(this.primerValor)-parseFloat(this.segundoValor);
         break;
       }
-      //asignamos resultado a primer valor para poder concatenar operaciones y reseteamos res y segundoVal
-      this.primerValor = '' + this.result;
-      this.result = null;
-      this.segundoValor = '';
-      this.operation = '';
+
+      if(this.checkResult()) {
+        //asignamos resultado a primer valor para poder concatenar operaciones y reseteamos res y segundoVal
+        this.primerValor = '' + this.result;
+        this.result = null;
+        this.segundoValor = '';
+        this.operation = '';
+      }
     }
   }
 
+  /**
+   * 
+   */
   clearAll() {
     this.primerValor = '';
     this.segundoValor = '';
     this.result = null;
+    this.operation = '';
     this.isPrimerValueOperatorInserted = false;
+  }
+
+  /**
+   * 
+   */
+  deleteLastNum() {
+    //si no tenemos operador significa que estamos en el primer número
+    if(this.operation === ''){
+      this.primerValor = this.primerValor.slice(0, -1);
+    } else {
+      this.segundoValor = this.segundoValor.slice(0, -1);
+    }
   }
 
   /**
@@ -80,17 +124,59 @@ export class CalculadoraComponent implements OnInit {
    * @returns 
    */
   checkErrors() {
-    console.log('Entra en check errors')
     //comprobamos que tenemos valores para obtener resultado
     if(this.primerValor === '' || this.segundoValor === '') {
-      this.isError = true;
-      this.errorMessage = 'No value';
-      console.log('Error ', this.errorMessage)
+      this.showError('Impossible to give a result. Introduce a value to proceed with the operation.');
       return false;
     }
-    //comprobamos que 
+    return true;
+  }
+
+  /**
+   * 
+   * @param num 
+   * @returns 
+   */
+  checkSingleDecimalDot(num: string) {
+    for(let char of num) {
+      if(char === '.') {
+        this.showError('Already decimal number');
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 
+   */
+  checkResult() {
+    if (this.result === null || isNaN(this.result)) {
+      this.showError(`Resultado ${this.result}`);
+      return false;
+    }
 
     return true;
+  }
+
+  /**
+   * 
+   */
+  checkDivisionByZero() {
+    if(this.segundoValor === '0') {
+      this.showError('Trying to divide by 0')
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 
+   * @param msg 
+   */
+  showError(msg: string) {
+    this.isError = true;
+    this.errorMessage = msg;
   }
 
 }
