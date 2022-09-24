@@ -164,7 +164,7 @@ export class CalculadoraComponent implements OnInit {
    */
   checkDivisionByZero() {
     if(this.segundoValor === '0') {
-      this.showError('Trying to divide by 0')
+      this.showError('Trying to divide by 0');
       return true;
     }
     return false;
