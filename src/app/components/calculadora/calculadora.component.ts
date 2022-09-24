@@ -71,7 +71,7 @@ export class CalculadoraComponent implements OnInit {
       switch(this.operation) {
       case '/':
         //comprobamos que no se intenta dividir entre 0
-        if(!this.checkDivisionByZero) {
+        if(!this.checkDivisionByZero()) {
           this.result = parseFloat(this.primerValor)/parseFloat(this.segundoValor);
         }
         break;
@@ -86,8 +86,9 @@ export class CalculadoraComponent implements OnInit {
         break;
       }
 
-      if(this.checkResult()) {
+      if(!this.isError && this.checkResult()) {
         //asignamos resultado a primer valor para poder concatenar operaciones y reseteamos res y segundoVal
+        this.primerValor = '';
         this.primerValor = '' + this.result;
         this.result = null;
         this.segundoValor = '';
@@ -155,7 +156,6 @@ export class CalculadoraComponent implements OnInit {
       this.showError(`Resultado ${this.result}`);
       return false;
     }
-
     return true;
   }
 
