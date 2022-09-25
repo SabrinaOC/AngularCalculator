@@ -4,13 +4,13 @@
 ## DESCRIPTION 🖊️ 
 * Calculator app for simple operations, i.e., addition, subtraction, multiplication and division. Decimal operations included.
 <p align="center">
-  <img width="530" src="../screenshots/general.PNG"/>
+  <img width="530" src="./screenshots/general.PNG"/>
 </p>
 
 ## HOW IT WORKS 📌 🧮
 * See below an example operating with decimals.
 <p align="center">
-  <img width="530" src="../screenshots/floatOperation.gif"/>
+  <img width="530" src="./screenshots/floatOperation.gif"/>
 </p>
 
 ## ERROR HANDLE ⚠️
@@ -18,13 +18,13 @@ Errors handled by showing alert and preventing the operation to be finished.
 
 * General error and calculator view.
 <p align="center">
-  <img width="530" src="../screenshots/errorFullScreen.PNG"/>
+  <img width="530" src="./screenshots/errorFullScreen.PNG"/>
 </p>
 
 * Some error message examples.
 <p align="center">
-  <img width="830" src="../screenshots/errorMsg.PNG"/>
-  <img width="830" src="../screenshots/errorDecimal.PNG"/>
+  <img width="830" src="./screenshots/errorMsg.PNG"/>
+  <img width="830" src="./screenshots/errorDecimal.PNG"/>
 </p>
 
 
